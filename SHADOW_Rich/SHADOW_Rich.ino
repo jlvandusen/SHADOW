@@ -55,10 +55,10 @@
 // ---------------------------------------------------------------------------------------
 
 //Primary Controller 
-String PS3MoveNavigatonPrimaryMAC = "00:06:F7:C3:E3:9C"; //If using multiple controlers, designate a primary
+String PS3MoveNavigatonPrimaryMAC = "00:07:04:EF:24:93"; //If using multiple controlers, designate a primary
 
 
-byte drivespeed1 = 75;   //set these 3 to whatever speeds work for you. 0-stop, 127-full speed.
+byte drivespeed1 = 100;   //set these 3 to whatever speeds work for you. 0-stop, 127-full speed.
 byte drivespeed2 = 127;  //Recommend beginner: 50 to 75, experienced: 100 to 127, I like 100.
 
 byte turnspeed = 75; //50;     // the higher this number the faster it will spin in place, lower - easier to control.
@@ -67,7 +67,7 @@ byte turnspeed = 75; //50;     // the higher this number the faster it will spin
 byte domespeed = 127;    // If using a speed controller for the dome, sets the top speed
                          // Use a number up to 127 for serial
 
-byte ramping = 4; //3;   // Ramping- the lower this number the longer R2 will take to speedup or slow down,
+byte ramping = 7; //3;   // Ramping- the lower this number the longer R2 will take to speedup or slow down,
                          // change this by increments of 1
 
 int footDriveSpeed = 0;
@@ -110,11 +110,8 @@ int motorControllerBaudRate = 9600; // Set the baud rate for the Syren motor con
 const int UTILITY_ARM_TOP_PIN   = 9;
 const int UTILITY_ARM_BOTTOM_PIN  = 10;
 
-int utilArmTopClosedPos = 0;    // variable to store the servo closed position 
-int utilArmTopOpenPos = 90;    // variable to store the servo Opened position 
-
-int utilArmBottomClosedPos = 90;    // variable to store the servo closed position
-int utilArmBottomOpenPos = 0;    // variable to store the servo Opened position
+int utilArmClosedPos = 0;    // variable to store the servo closed position 
+int utilArmOpenPos = 140;    // variable to store the servo Opened position 
 
 // Check value, open = true, closed = false
 boolean isUtilArmTopOpen = false;    
@@ -827,23 +824,23 @@ boolean ps3FootMotorDrive(PS3BT* myPS3 = PS3Nav)
               }
           }
 
-          if ( abs(joystickPosition-128) < joystickFootDeadZoneRange)
-          {
-              footDriveSpeed = 0;
-          } else if (footDriveSpeed < stickSpeed)
-          {
-              if ((stickSpeed-footDriveSpeed)>(ramping+1))
-                  footDriveSpeed+=ramping;
-              else
-                  footDriveSpeed = stickSpeed;
-          }
-          else if (footDriveSpeed > stickSpeed)
-          {
-              if ((footDriveSpeed-stickSpeed)>(ramping+1))
-                  footDriveSpeed-=ramping;
-              else
-                  footDriveSpeed = stickSpeed;  
-          }
+//          if ( abs(joystickPosition-128) < joystickFootDeadZoneRange)
+//          {
+//              footDriveSpeed = 0;
+//          } else if (footDriveSpeed < stickSpeed)
+//          {
+//              if ((stickSpeed-footDriveSpeed)>(ramping+1))
+//                  footDriveSpeed+=ramping;
+//              else
+//                  footDriveSpeed = stickSpeed;
+//          }
+//          else if (footDriveSpeed > stickSpeed)
+//          {
+//              if ((footDriveSpeed-stickSpeed)>(ramping+1))
+//                  footDriveSpeed-=ramping;
+//              else
+//                  footDriveSpeed = stickSpeed;  
+//          }
           
           turnnum = (myPS3->getAnalogHat(LeftHatX));
 
@@ -1394,32 +1391,16 @@ void soundControl()
 }  
 
 
-void openUtilArm(int arm)
+void openUtilArm(int arm, int position = utilArmOpenPos)
 {
-  //When passed a position - this can "partially" open the arms.
-  //Great for more interaction
-  switch (arm)
-  {
-    case UTIL_ARM_TOP:
-      moveUtilArm(arm, utilArmTopOpenPos);
-      break;
-    case UTIL_ARM_BOTTOM:
-      moveUtilArm(arm, utilArmBottomOpenPos);
-      break;
-  }
+    //When passed a position - this can "partially" open the arms.
+    //Great for more interaction
+    moveUtilArm(arm, utilArmOpenPos);
 }
 
 void closeUtilArm(int arm)
 {
-  switch (arm)
-  {
-    case UTIL_ARM_TOP:
-      moveUtilArm(arm, utilArmTopClosedPos);
-      break;
-    case UTIL_ARM_BOTTOM:
-      moveUtilArm(arm, utilArmBottomClosedPos);
-      break;
-  } 
+    moveUtilArm(arm, utilArmClosedPos);
 }
 
 void waveUtilArm(int arm)
@@ -1449,7 +1430,7 @@ void moveUtilArm(int arm, int position)
     {
       case UTIL_ARM_TOP:
         UtilArmTopServo.write(position);
-        if ( position == utilArmTopClosedPos)
+        if ( position == utilArmClosedPos)
         {
           isUtilArmTopOpen = false;
         } else
@@ -1459,7 +1440,7 @@ void moveUtilArm(int arm, int position)
         break;
       case UTIL_ARM_BOTTOM:  
         UtilArmBottomServo.write(position);
-        if ( position == utilArmBottomClosedPos)
+        if ( position == utilArmClosedPos)
         {
           isUtilArmBottomOpen = false;
         } else

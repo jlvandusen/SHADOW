@@ -55,7 +55,7 @@
 // ---------------------------------------------------------------------------------------
 
 //Primary Controller 
-String PS3MoveNavigatonPrimaryMAC = "00:06:F7:C3:E3:9C"; //If using multiple controlers, designate a primary
+String PS3MoveNavigatonPrimaryMAC = "00:06:F7:0F:44:BF"; //If using multiple controlers, designate a primary
 
 
 byte drivespeed1 = 75;   //set these 3 to whatever speeds work for you. 0-stop, 127-full speed.
@@ -64,7 +64,7 @@ byte drivespeed2 = 127;  //Recommend beginner: 50 to 75, experienced: 100 to 127
 byte turnspeed = 75; //50;     // the higher this number the faster it will spin in place, lower - easier to control.
                                // Recommend beginner: 40 to 50, experienced: 50 $ up, I like 75
 
-byte domespeed = 127;    // If using a speed controller for the dome, sets the top speed
+byte domespeed = 75;    // If using a speed controller for the dome, sets the top speed
                          // Use a number up to 127 for serial
 
 byte ramping = 4; //3;   // Ramping- the lower this number the longer R2 will take to speedup or slow down,
@@ -78,7 +78,7 @@ byte driveDeadBandRange = 10;     // Used to set the Sabertooth DeadZone for foo
 
 int invertTurnDirection = 1;   //This may need to be set to 1 for some configurations
 
-byte domeAutoSpeed = 127;     // Speed used when dome automation is active (1- 127)
+byte domeAutoSpeed = 75;     // Speed used when dome automation is active (1- 127)
 int time360DomeTurn = 1250;  // milliseconds for dome to complete 360 turn at domeAutoSpeed
 
 //#define TEST_CONROLLER   //Support coming soon
@@ -182,7 +182,7 @@ uint32_t currentTime = 0;
 uint32_t lastLoopTime = 0;
 int badPS3Data = 0;
 
-SPP SerialBT(&Btd,"Astromech:R5J2","9327"); // Create a BT Serial device(defaults: "Arduino" and the pin to "0000" if not set)
+SPP SerialBT(&Btd,"Astromech:R4K5","1234"); // Create a BT Serial device(defaults: "Arduino" and the pin to "0000" if not set)
 boolean firstMessage = true;
 String output = "";
 

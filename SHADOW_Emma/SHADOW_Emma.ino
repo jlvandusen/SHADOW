@@ -55,10 +55,10 @@
 // ---------------------------------------------------------------------------------------
 
 //Primary Controller 
-String PS3MoveNavigatonPrimaryMAC = "00:06:F7:C3:E3:9C"; //If using multiple controlers, designate a primary
+String PS3MoveNavigatonPrimaryMAC = "E0:AE:5E:39:61:FA"; //If using multiple controlers, designate a primary
 
 
-byte drivespeed1 = 75;   //set these 3 to whatever speeds work for you. 0-stop, 127-full speed.
+byte drivespeed1 = 70;   //set these 3 to whatever speeds work for you. 0-stop, 127-full speed.
 byte drivespeed2 = 127;  //Recommend beginner: 50 to 75, experienced: 100 to 127, I like 100.
 
 byte turnspeed = 75; //50;     // the higher this number the faster it will spin in place, lower - easier to control.
@@ -67,7 +67,7 @@ byte turnspeed = 75; //50;     // the higher this number the faster it will spin
 byte domespeed = 127;    // If using a speed controller for the dome, sets the top speed
                          // Use a number up to 127 for serial
 
-byte ramping = 4; //3;   // Ramping- the lower this number the longer R2 will take to speedup or slow down,
+byte ramping = 7; //3;   // Ramping- the lower this number the longer R2 will take to speedup or slow down,
                          // change this by increments of 1
 
 int footDriveSpeed = 0;
@@ -76,7 +76,7 @@ byte joystickFootDeadZoneRange = 15;  // For controllers that centering problems
 byte joystickDomeDeadZoneRange = 10;  // For controllers that centering problems, use the lowest number with no drift
 byte driveDeadBandRange = 10;     // Used to set the Sabertooth DeadZone for foot motors
 
-int invertTurnDirection = 1;   //This may need to be set to 1 for some configurations
+int invertTurnDirection = -1;   //This may need to be set to 1 for some configurations
 
 byte domeAutoSpeed = 127;     // Speed used when dome automation is active (1- 127)
 int time360DomeTurn = 1250;  // milliseconds for dome to complete 360 turn at domeAutoSpeed
@@ -110,11 +110,8 @@ int motorControllerBaudRate = 9600; // Set the baud rate for the Syren motor con
 const int UTILITY_ARM_TOP_PIN   = 9;
 const int UTILITY_ARM_BOTTOM_PIN  = 10;
 
-int utilArmTopClosedPos = 0;    // variable to store the servo closed position 
-int utilArmTopOpenPos = 90;    // variable to store the servo Opened position 
-
-int utilArmBottomClosedPos = 90;    // variable to store the servo closed position
-int utilArmBottomOpenPos = 0;    // variable to store the servo Opened position
+int utilArmClosedPos = 0;    // variable to store the servo closed position 
+int utilArmOpenPos = 140;    // variable to store the servo Opened position 
 
 // Check value, open = true, closed = false
 boolean isUtilArmTopOpen = false;    
@@ -1394,32 +1391,16 @@ void soundControl()
 }  
 
 
-void openUtilArm(int arm)
+void openUtilArm(int arm, int position = utilArmOpenPos)
 {
-  //When passed a position - this can "partially" open the arms.
-  //Great for more interaction
-  switch (arm)
-  {
-    case UTIL_ARM_TOP:
-      moveUtilArm(arm, utilArmTopOpenPos);
-      break;
-    case UTIL_ARM_BOTTOM:
-      moveUtilArm(arm, utilArmBottomOpenPos);
-      break;
-  }
+    //When passed a position - this can "partially" open the arms.
+    //Great for more interaction
+    moveUtilArm(arm, utilArmOpenPos);
 }
 
 void closeUtilArm(int arm)
 {
-  switch (arm)
-  {
-    case UTIL_ARM_TOP:
-      moveUtilArm(arm, utilArmTopClosedPos);
-      break;
-    case UTIL_ARM_BOTTOM:
-      moveUtilArm(arm, utilArmBottomClosedPos);
-      break;
-  } 
+    moveUtilArm(arm, utilArmClosedPos);
 }
 
 void waveUtilArm(int arm)
@@ -1449,7 +1430,7 @@ void moveUtilArm(int arm, int position)
     {
       case UTIL_ARM_TOP:
         UtilArmTopServo.write(position);
-        if ( position == utilArmTopClosedPos)
+        if ( position == utilArmClosedPos)
         {
           isUtilArmTopOpen = false;
         } else
@@ -1459,7 +1440,7 @@ void moveUtilArm(int arm, int position)
         break;
       case UTIL_ARM_BOTTOM:  
         UtilArmBottomServo.write(position);
-        if ( position == utilArmBottomClosedPos)
+        if ( position == utilArmClosedPos)
         {
           isUtilArmBottomOpen = false;
         } else
